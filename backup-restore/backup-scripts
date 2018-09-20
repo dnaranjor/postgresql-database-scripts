@@ -1,4 +1,9 @@
+/*
 Below is a sample batch script for Windows that backs up selected databases and then does a full Pg_dumpall as well
+
+Source: http://www.postgresonline.com/journal/archives/19-Setting-up-PgAgent-and-Doing-Scheduled-Backups.html
+
+*/
 
 
 @echo off
@@ -27,8 +32,9 @@ REM Our favorite all purpose compression/uncompression util for Windows is 7Zip 
 %PGBIN%pg_dump -i -h %PGHOST% -U %PGUSER% -F c -b -v -f "%BACKUPDIR%db1-%year%%month%%day%%hh%.compressed" db1
 %PGBIN%pg_dump -i -h %PGHOST% -U %PGUSER% -F c -b -v -f "%BACKUPDIR%db2-%year%%month%%day%%hh%.compressed" db2
 
+/*
 Below is an equivalent Linux/Unix backup shell script
-
+*/
 
 #!/bin/bash
 #backup directory can be a file server share that the PgAgent daemon account has access to
@@ -53,4 +59,6 @@ done
 #this section deletes the previous month of same day backup except for the full server backup
 rm -f $BACKUPDIR/*`date --date="last month" +%Y%m%d`*.compressed
 
+/*
 Save the respective above scripts in a (dailybackup.bat for windows pgagent) or (dailybackup.sh for Linux/Unix pgagent) file. 
+*/
