@@ -1,4 +1,4 @@
-# oracle-database-scripts
+# postgresql-database-scripts
 PostgreSQL Database Server scripts that let us all rest at night
 ============================================================
 
