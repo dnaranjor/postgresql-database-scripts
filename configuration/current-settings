@@ -16,3 +16,11 @@ Example output:
 "shared_buffers","postmaster","8kB","16384","1024","16384"
 "maintenance_work_mem","user","kB","65536","65536","65536"
 "work_mem","user","kB","4096","4096","4096"
+
+
+# If you want to see all settings in friendly units, use:
+
+SHOW ALL;
+
+Example Output:
+
