@@ -1,0 +1,18 @@
+#An easy way to check the current settings is to query the pg_settings view:
+
+SELECT name, context , unit ,
+setting, boot_val, reset_val
+FROM pg_settings
+WHERE name IN ( 'listen_addresses', 'max_connections', 'shared_buffers', 'effec
+tive_cache_size', 'work_mem', 'maintenance_work_mem'
+)
+ORDER BY context, name;
+
+Example output:
+
+"name","context","unit","setting","boot_val","reset_val"
+"listen_addresses","postmaster","","localhost","localhost","localhost"
+"max_connections","postmaster","","100","100","100"
+"shared_buffers","postmaster","8kB","16384","1024","16384"
+"maintenance_work_mem","user","kB","65536","65536","65536"
+"work_mem","user","kB","4096","4096","4096"
