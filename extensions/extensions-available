@@ -1,0 +1,3 @@
+# To view all extension binaries already available on your server, enter:
+
+SELECT * FROM pg_available_extensions;
