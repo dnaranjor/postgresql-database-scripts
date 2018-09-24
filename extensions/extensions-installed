@@ -1,0 +1,47 @@
+# Extensions installed on server
+
+SELECT name, default_version, installed_version, left(comment,30) As comment
+FROM pg_available_extensions
+WHERE installed_version IS NOT NULL
+ORDER BY name;
+
+# Output example:
+
+name | def | installed | com
+---------------+-------+-----------+--------------------------------------------
+btree_gist | 1.0 | 1.0 | support for indexing common datatypes in..
+fuzzystrmatch | 1.0 | 1.0 | determine similarities and distance betw..
+hstore | 1.2 | 1.2 | data type for storing sets of (key, valu..
+plpgsql | 1.0 | 1.0 | PL/pgSQL procedural language..
+plv8 | 1.3.0 | 1.3.0 | PL/JavaScript (v8) trusted procedural la..
+postgis | 2.1.3 | 2.1.3 | PostGIS geometry, geography, and raster ..
+www_fdw | 0.1.8 | 0.1.8 | WWW FDW - extension for handling differe..
+
+#To get more details about a particular extension already installed on your server, enter
+#the following command from psql:
+
+\dx+ fuzzystrmatch
+
+#Alternatively, execute the following query:
+
+SELECT pg_catalog.pg_describe_object(d.classid, d.objid, 0) AS description
+FROM pg_catalog.pg_depend AS D INNER JOIN pg_catalog.pg_extension AS E
+ON D.refobjid = E.oid
+WHERE D.refclassid = 'pg_catalog.pg_extension'::pg_catalog.regclass AND deptype
+= 'e' AND E.extname = 'fuzzystrmatch';
+
+# This shows what’s packaged in the extension:
+# Output example:
+
+description
+----------------------------------------------------------------------------
+function dmetaphone_alt(text)
+function dmetaphone(text)
+function difference(text,text)
+function text_soundex(text)
+function soundex(text)
+function metaphone(text,integer)
+function levenshtein_less_equal(text,text,integer,integer,integer,integer)
+function levenshtein_less_equal(text,text,integer)
+function levenshtein(text,text,integer,integer,integer)
+function levenshtein(text,text)
