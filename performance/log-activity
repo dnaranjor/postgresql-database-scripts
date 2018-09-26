@@ -1,0 +1,7 @@
+# Create table and perform first insert
+
+SELECT * INTO log_activity FROM pg_stat_activity;
+
+# Insert every five seconds.
+
+INSERT INTO log_activity SELECT * FROM pg_stat_activity; \watch 5
