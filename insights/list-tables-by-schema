@@ -1,0 +1,17 @@
+# list all tables in the pg_catalog schema that start with pg_t, along
+# with their sizes.
+
+\dt+ pg_catalog.pg_t*
+
+#Example Output:
+
+Schema | Name | Type | Owner | Size | Description
+-----------+------------------+-------+----------+--------+-------------
+pg_catalog | pg_tablespace | table | postgres | 40 kB |
+pg_catalog | pg_trigger | table | postgres | 16 kB |
+pg_catalog | pg_ts_config | table | postgres | 40 kB |
+pg_catalog | pg_ts_config_map | table | postgres | 48 kB |
+pg_catalog | pg_ts_dict | table | postgres | 40 kB |
+pg_catalog | pg_ts_parser | table | postgres | 40 kB |
+pg_catalog | pg_ts_template | table | postgres | 40 kB |
+pg_catalog | pg_type | table | postgres | 112 kB |
