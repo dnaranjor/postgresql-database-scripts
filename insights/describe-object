@@ -1,0 +1,18 @@
+# If we wanted details about a particular object, such as the pg_ts_config table, we would use:
+
+\d+ pg_ts_dict
+
+# Example ouput:
+
+                       Table "pg_catalog.pg_ts_dict"
+     Column     | Type | Modifiers | Storage  | Stats target | Description 
+----------------+------+-----------+----------+--------------+-------------
+ dictname       | name | not null  | plain    |              | 
+ dictnamespace  | oid  | not null  | plain    |              | 
+ dictowner      | oid  | not null  | plain    |              | 
+ dicttemplate   | oid  | not null  | plain    |              | 
+ dictinitoption | text |           | extended |              | 
+Indexes:
+    "pg_ts_dict_dictname_index" UNIQUE, btree (dictname, dictnamespace)
+    "pg_ts_dict_oid_index" UNIQUE, btree (oid)
+Has OIDs: yes
