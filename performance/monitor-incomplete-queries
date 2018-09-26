@@ -1,0 +1,6 @@
+# To monitor the queries that have not completed:
+# Watching other connection traffic every 10 seconds
+
+SELECT datname, waiting, query
+FROM pg_stat_activity
+WHERE state = 'active' AND pid != pg_backend_pid(); \watch 10
