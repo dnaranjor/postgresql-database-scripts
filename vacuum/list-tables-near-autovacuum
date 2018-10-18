@@ -1,0 +1,34 @@
+# how close am I to forced autovacuum freeze on a large table?
+# More specifically, that says "give me the top 20 tables over 1GB, 
+sorted by the age of their oldest XID".  
+
+SELECT relname, age(relfrozenxid) as xid_age, 
+    pg_size_pretty(pg_table_size(oid)) as table_size
+FROM pg_class 
+WHERE relkind = 'r' and pg_table_size(oid) > 1073741824
+ORDER BY age(relfrozenxid) DESC LIMIT 20;
+
+# Example output:
+
+      relname      |  xid_age  | table_size 
+-------------------+-----------+------------
+ docemi            | 115818565 | 94 GB
+ docemimontos      | 101033943 | 38 GB
+ edtesii           |  96692688 | 7698 MB
+ infboletadetalle  |  95703275 | 13 GB
+ docemidocidrel    |  92829395 | 29 GB
+ ageenviosunat     |  86003187 | 3942 MB
+ mixtoreceptmp     |  85480846 | 9271 MB
+ docemiinfbol      |  84577989 | 2453 MB
+ agerecepmixtozip  |  83570094 | 2523 MB
+ mailemidet        |  83255568 | 6234 MB
+ agerespuestasunat |  82771428 | 3519 MB
+ docreclog         |  82186859 | 3675 MB
+ mailrecadj        |  81931181 | 2140 MB
+ otboletasdetalle  |  81800772 | 2014 MB
+ mailemiadj        |  81604137 | 11 GB
+ mailemi           |  79529134 | 55 GB
+ docemilog         |  76592433 | 155 GB
+ docemiest         |  62521117 | 74 GB
+ mailrec           |  51279682 | 5058 MB
+(19 rows)
