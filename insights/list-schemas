@@ -1,0 +1,15 @@
+# The pg_toast_temp schema are for the TOAST tables associated with 
+# temp tables. Normal tables may have associated TOAST tables containing 
+# out-of-line and/or compressed data. They normally live in the pg_toast 
+# schema. To prevent naming conflicts when two temp tables of the same 
+# name both have TOAST tables, separate pg_toast_temp schema must be 
+# created for them. 
+
+# Don't delete them or mess with them, and just examine the pg_namespace 
+# system table with something like: 
+
+select * from pg_namespace where not nspname like 'pg_%'; 
+
+# Si se desea verificar cuantos schemas existen, incluyendo los de sistema:
+
+select * from pg_namespace;
