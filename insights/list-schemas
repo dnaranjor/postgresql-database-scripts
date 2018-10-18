@@ -13,3 +13,15 @@ select * from pg_namespace where not nspname like 'pg_%';
 # Si se desea verificar cuantos schemas existen, incluyendo los de sistema:
 
 select * from pg_namespace;
+
+# Tambien, desde dentro del psql:
+
+\dn
+
+En este caso, unicamente se mostraran los Schemas creados por el usuario final, p.ej.
+
+ List of schemas
+  Name  |  Owner   
+--------+----------
+ public | pplperu2
+(1 row)
