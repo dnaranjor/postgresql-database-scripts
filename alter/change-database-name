@@ -1,0 +1,18 @@
+# To rename the db database to newdb, you follow these steps:
+
+# First, disconnect from the database that you want to rename by connecting to another 
+# database e.g., postgres. If you use the psql command line, you can use the following command to connect to the postgres database:
+
+\c postgres;
+
+# Next, check the all active connections to the db database by using the following query:
+
+SELECT * FROM pg_stat_activity WHERE datname = 'db';
+
+# If the database you want to rename has active connections, terminate all using the following statement:
+
+SELECT pg_terminate_backend (pid) FROM pg_stat_activity WHERE datname = 'db';
+
+# After that, rename the db database to newdb using the ALTER DATABASE RENAME TO statement as follows:
+
+ALTER DATABASE "db" RENAME TO "newdb";
