@@ -1,9 +1,10 @@
--- Show last autovacuum by table size descending.
+-- Show last autovacuum and last analyze by table size descending.
 select
     pg_class.relname,
     pg_namespace.nspname,
     pg_size_pretty(pg_total_relation_size(pg_namespace.nspname::text || '.' || pg_class.relname::text)),
     pg_stat_all_tables.last_autovacuum,
+    pg_stat_all_tables.last_autoanalyze,
     pg_relation_size(pg_namespace.nspname::text || '.' || pg_class.relname::text)
 from
     pg_class
@@ -14,5 +15,5 @@ from
 where
     pg_namespace.nspname not in ('pg_toast')
 order by
-    5 desc
+    4 desc
 ;
