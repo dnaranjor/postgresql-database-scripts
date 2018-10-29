@@ -6,20 +6,17 @@
 SELECT * FROM pg_stat_activity;
 
 # Si se desea lista SOLO las conexiones activas,
+-- (pre 9.2)
+SELECT procpid, age(clock_timestamp(), query_start), usename, current_query 
+FROM pg_stat_activity 
+WHERE current_query != '<IDLE>' AND current_query NOT ILIKE '%pg_stat_activity%' 
+ORDER BY query_start desc;
 
-SELECT 
-    pid
-    ,datname
-    ,usename
-    ,application_name
-    ,client_hostname
-    ,client_port
-    ,backend_start
-    ,query_start
-    ,query
-    ,state
-FROM pg_stat_activity
-WHERE state = 'active'
+-- (post 9.2)
+SELECT pid, age(clock_timestamp(), query_start), usename, query 
+FROM pg_stat_activity 
+WHERE query != '<IDLE>' AND query NOT ILIKE '%pg_stat_activity%' 
+ORDER BY query_start desc;
 
 #Additionally, the command provides details of the last query running on each connection,
 #the connected user (usename), the database (datname) in use, and the start
@@ -29,6 +26,10 @@ WHERE state = 'active'
 # 2. Now cancel all active queries on a connection:
 
 SELECT pg_cancel_backend(procid)
+
+-- kill idle queries
+
+SELECT pg_terminate_backend(procpid);
 
 #This does not terminate the connection itself, though.
 
