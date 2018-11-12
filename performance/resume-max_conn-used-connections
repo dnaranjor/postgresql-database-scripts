@@ -1,0 +1,14 @@
+# Statistics about the number of connections:
+
+select max_conn, used, reserved_for_super, max_conn - used - reserved_for_super AS res_for_normal 
+from 
+(select count(*) AS used from pg_stat_activity) t1,
+(select setting::int AS reserved_for_super from pg_settings where name=$$superuser_reserved_connections$$) t2,
+(select setting::int AS max_conn from pg_settings where name=$$max_connections$$) t3;
+
+# Output example:
+
+ max_conn | used | reserved_for_super | res_for_normal 
+----------+------+--------------------+----------------
+      600 |  398 |                  3 |            199
+(1 fila)
