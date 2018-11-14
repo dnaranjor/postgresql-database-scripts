@@ -1,0 +1,7 @@
+# Para listar la cantidad de lock existentes en una DB:
+
+SELECT locktype, relation::regclass, mode, transactionid AS tid,
+virtualtransaction AS vtid, pid, granted
+FROM pg_catalog.pg_locks l LEFT JOIN pg_catalog.pg_database db
+ON db.oid = l.database WHERE (db.datname = '<NOMBRE_DE_LA_BBDD>' OR db.datname IS NULL)
+AND NOT pid = pg_backend_pid();
