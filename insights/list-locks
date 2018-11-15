@@ -5,3 +5,40 @@ virtualtransaction AS vtid, pid, granted
 FROM pg_catalog.pg_locks l LEFT JOIN pg_catalog.pg_database db
 ON db.oid = l.database WHERE (db.datname = '<NOMBRE_DE_LA_BBDD>' OR db.datname IS NULL)
 AND NOT pid = pg_backend_pid();
+
+# Para totalizar por tipos de Lock:
+
+SELECT mode, COUNT(mode) FROM pg_locks l RIGHT JOIN pg_database d ON (d.oid=l.database) WHERE d.datallowconn GROUP BY mode ORDER BY count DESC;
+
+# Output example:
+
+           mode           | count 
+--------------------------+-------
+ AccessShareLock          |   278
+ RowExclusiveLock         |   190
+ ShareUpdateExclusiveLock |     1
+                          |     0
+(4 rows)
+
+
+# Para listar todos los locks incluyendo la BBDD donde estan:
+
+SELECT granted, mode, datname FROM pg_locks l RIGHT JOIN pg_database d ON (d.oid=l.database) WHERE d.datallowconn;
+
+# Output example:
+
+ granted |           mode           |  datname  
+---------+--------------------------+-----------
+ t       | AccessShareLock          | PPLPERU2
+ t       | RowExclusiveLock         | PPLPERU2
+ t       | AccessShareLock          | PPLPERU2
+ t       | RowExclusiveLock         | PPLPERU2
+ t       | AccessShareLock          | PPLPERU2
+ t       | RowExclusiveLock         | PPLPERU2
+ t       | AccessShareLock          | PPLPERU2
+ t       | RowExclusiveLock         | PPLPERU2
+ t       | AccessShareLock          | PPLPERU2
+ t       | RowExclusiveLock         | PPLPERU2
+ t       | AccessShareLock          | PPLPERU2
+ t       | RowExclusiveLock         | PPLPERU2
+ t       | AccessShareLock          | PPLPERU2
