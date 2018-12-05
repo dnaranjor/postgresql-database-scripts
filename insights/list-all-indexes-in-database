@@ -1,0 +1,7 @@
+# List all indexes in postgres database
+
+select indexname from pg_indexes;
+
+# List all indexes in 'public' schema
+
+select indexname from pg_indexes where schemaname = 'public';
