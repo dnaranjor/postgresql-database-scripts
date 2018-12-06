@@ -1,0 +1,14 @@
+# En Postgresql 8.3:
+
+SELECT  
+ (SELECT  count(*) as activas FROM   pg_stat_activity WHERE   current_query != '<IDLE>') as Activas,
+ count(*) as inactivas,
+(SELECT  count(*) as activas FROM   pg_stat_activity) as Total,now() as fecha_hora 
+ FROM   pg_stat_activity WHERE   current_query = '<IDLE>';
+ 
+ # Resultado:
+ 
+  activas | inactivas | total |          fecha_hora           
+---------+-----------+-------+-------------------------------
+     155 |       250 |   405 | 2018-12-06 19:50:00.301262-03
+(1 row)
