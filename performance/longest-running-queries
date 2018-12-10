@@ -13,3 +13,29 @@ FROM pg_stat_activity
 WHERE query != '<IDLE>' 
 AND upper(query) LIKE 'SELECT%' 
 ORDER BY query_start limit 10;
+
+#O esta version, mejorada:
+
+SELECT 'SELECT pg_cancel_backend(' || pid ||');' AS to_cancel, 
+        state, 
+        query_start, 
+        DATE_TRUNC('second',(now() - query_start)) AS runtime, 
+        SUBSTR(query,1,75) AS running_query 
+FROM pg_stat_activity WHERE state LIKE '%idle%' AND UPPER(query) LIKE 'SELECT%' ORDER BY query_start ASC LIMIT 10;
+
+#Salida de ejemplo:
+
+            to_cancel             | state |          query_start          | runtime  |                                running_query                                
+----------------------------------+-------+-------------------------------+----------+-----------------------------------------------------------------------------
+ SELECT pg_cancel_backend(22358); | idle  | 2018-12-10 13:55:23.272824-03 | 03:01:06 | select * from docemi where decoid = 232 and detipodte = 33 and defolio = 88
+ SELECT pg_cancel_backend(35037); | idle  | 2018-12-10 14:09:53.103132-03 | 02:46:36 | select * from docemilog where deldocid =699708798;
+ SELECT pg_cancel_backend(40345); | idle  | 2018-12-10 14:15:32.632428-03 | 02:40:57 | SELECT drtipodte, drfolio, drrutemi, drrznsocemi, drinsdate, drfchemi, drmn
+ SELECT pg_cancel_backend(38043); | idle  | 2018-12-10 14:15:54.924017-03 | 02:40:34 | SELECT drtipodte, drfolio, drrutemi, drrznsocemi, drinsdate, drfchemi, drmn
+ SELECT pg_cancel_backend(1986);  | idle  | 2018-12-10 14:29:05.274273-03 | 02:27:24 | SELECT obsid, obsnroseg, obstype, obsstatus, obsstatusmsg FROM otbooksegmen
+ SELECT pg_cancel_backend(13228); | idle  | 2018-12-10 14:45:18.333622-03 | 02:11:11 | SELECT distinct defolio, dessiistatus, derutrec,        deinsdate, defchemi
+ SELECT pg_cancel_backend(24621); | idle  | 2018-12-10 14:57:35.853646-03 | 01:58:53 | SELECT DISTINCT dessiistatus, detipodte, delmsg, dedocid FROM docemilog, do
+ SELECT pg_cancel_backend(24599); | idle  | 2018-12-10 14:57:47.1275-03   | 01:58:42 | SELECT DISTINCT dessiistatus, detipodte, delmsg, dedocid FROM docemilog, do
+ SELECT pg_cancel_backend(24594); | idle  | 2018-12-10 14:58:02.253834-03 | 01:58:27 | SELECT DISTINCT dessiistatus, detipodte, delmsg, dedocid FROM docemilog, do
+ SELECT pg_cancel_backend(42543); | idle  | 2018-12-10 15:08:28.812569-03 | 01:48:00 | SELECT draregistro,draclase,dravalor FROM docrecadd WHERE dradocid = $1  
+(10 rows)
+
