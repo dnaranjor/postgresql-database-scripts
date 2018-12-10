@@ -12,3 +12,18 @@ SELECT
 ---------+-----------+-------+-------------------------------
      155 |       250 |   405 | 2018-12-06 19:50:00.301262-03
 (1 row)
+
+# En Postgresql > 9.5:
+
+SELECT (SELECT count(*) FROM pg_stat_activity WHERE state NOT LIKE '%idle%') as activas, 
+       (SELECT count(*) FROM pg_stat_activity WHERE state LIKE '%idle%') as inactivas,
+	   (SELECT count(*) FROM pg_stat_activity) as total,
+	   now() as fecha_hora
+	   FROM pg_stat_activity
+	   LIMIT 1;
+    
+# Resultado:
+
+ activas | inactivas | total |          fecha_hora           
+---------+-----------+-------+-------------------------------
+       8 |       387 |   395 | 2018-12-10 10:40:48.757472-03
