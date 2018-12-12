@@ -1,0 +1,77 @@
+# PostgreSQL has some building blocks for replication monitoring, and the following are some important functions and views which can be use for monitoring the replication:
+#
+# 1. pg_stat_replication view on master/primary server.
+# 
+# This view helps in monitoring the standby on Master. It gives you the following details:
+# 
+# pid:              Process id of walsender process
+#   usesysid:         OID of user which is used for Streaming replication.
+#   usename:          Name of user which is used for Streaming replication
+#   application_name: Application name connected to master
+#   client_addr:      Address of standby/streaming replication
+#   client_hostname:  Hostname of standby.
+#   client_port:      TCP port number on which standby communicating with WAL sender
+#   backend_start:    Start time when SR connected to Master.
+#  state:            Current WAL sender state i.e streaming
+#   sent_location:    Last transaction location sent to standby.
+#   write_location:   Last transaction written on disk at standby
+#   flush_location:   Last transaction flush on disk at standby.
+#   replay_location:  Last transaction flush on disk at standby.
+#   sync_priority:    Priority of standby server being chosen as synchronous standby
+#   sync_state:       Sync State of standby (is it async or synchronous).
+# e.g.:
+
+1. postgres=# select * from pg_stat_replication ;
+-[ RECORD 1 ]----+---------------------------------
+pid              | 1114
+usesysid         | 16384
+usename          | repuser
+application_name | walreceiver
+client_addr      | 172.17.0.3
+client_hostname  |
+client_port      | 52444
+backend_start    | 15-MAY-14 19:54:05.535695 -04:00
+state            | streaming
+sent_location    | 0/290044C0
+write_location   | 0/290044C0
+flush_location   | 0/290044C0
+replay_location  | 0/290044C0
+sync_priority    | 0
+sync_state       | async
+ 
+ 2. pg_is_in_recovery() : Function which tells whether standby is still in recovery mode or not.
+ 
+e.g.
+
+postgres=# select pg_is_in_recovery();
+ pg_is_in_recovery
+-------------------
+ t
+(1 row)
+ 
+ 
+ 3. pg_last_xlog_receive_location: Function which tells location of last transaction log which was streamed by Standby and also written on standby disk.
+ 
+e.g.
+
+postgres=# select pg_last_xlog_receive_location();
+ pg_last_xlog_receive_location
+-------------------------------
+ 0/29004560
+(1 row)
+
+4. pg_last_xlog_replay_location: Function which tells last transaction replayed during recovery process. e.g is given below:
+
+postgres=# select pg_last_xlog_replay_location();
+ pg_last_xlog_replay_location
+------------------------------
+ 0/29004560
+(1 row)
+ 
+5. pg_last_xact_replay_timestamp: This function tells about the time stamp of last transaction which was replayed during recovery. Below is an example:
+
+postgres=# select pg_last_xact_replay_timestamp();
+  pg_last_xact_replay_timestamp
+----------------------------------
+ 15-MAY-14 20:54:27.635591 -04:00
+(1 row)
