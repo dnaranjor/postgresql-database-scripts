@@ -1,0 +1,18 @@
+# After updating pg_hba.conf or postgresql.conf, the server needs the config needs to be reloaded. The easiest way to do this is by restarting the postgres service:
+```bash
+service postgresql restart
+```
+
+# When the `service` command is not available (no upstart on Synology NAS, for example), there are some more creative ways to reload the config. Note this first one needs to be done under the user that runs postgres (usually the user=`postgres`).
+```bash
+user#  sudo su postgres
+postgres#  pg_ctl reload
+```
+
+# If it complains about not having a data directory, you'll have to do it from within PostgreSQL itself.
+```bash
+psql -U postgres
+postgres=> SELECT pg_reload_conf();
+```
+
+# If that doesn't work (like modiying the listening addresses or ports) then you may just have to restart the machine. If it doesn't autostart, start the postgresql service/process.
