@@ -1,0 +1,8 @@
+#To kill sessions from OS OLDER than 2 hours (only in an emergency):
+# Ver < 8.3
+
+HOURS=2; for line in $(echo "select procpid from pg_stat_activity where current_query='<IDLE>' AND backend_start<= now()-interval '$HOURS hour' ;" | psql -U <USER> -d <DATABASE> -p <PORT>  -h localhost -tA ) ; do kill -15 $line ; done
+
+# Ver > 9.1
+
+HOURS=2; for line in $(echo "select pid from pg_stat_activity where query='<IDLE>' AND backend_start<= now()-interval '$HOURS hour' ;" | psql -U <USER> -d <DATABASE> -p <PORT>  -h localhost -tA ) ; do kill -15 $line ; done
