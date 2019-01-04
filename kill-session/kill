@@ -32,11 +32,11 @@ ORDER BY query_start desc;
 #times of the query. You need this view to grab the process IDs of connections that
 #you want to terminate.
 
-# 2. Now cancel all active queries on a connection:
+# 2. Now cancel all active (RUNNING) queries on a connection:
 
 SELECT pg_cancel_backend(procid)
 
--- kill idle queries
+-- kill IDLE queries
 
 SELECT pg_terminate_backend(procpid);
 
