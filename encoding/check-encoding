@@ -1,0 +1,40 @@
+# Encoding set for each database (using psql):
+
+SHOW client_encoding;
+
+ client_encoding 
+-----------------
+ UTF8
+(1 row)
+
+# Change the default encoding for some user:
+
+ALTER USER root SET client_encoding='UTF8';
+
+# Check current encoding for ALL users:
+
+SELECT usename, useconfig FROM pg_shadow;
+
+  usename   | useconfig 
+------------+-----------
+ cmena      | 
+ facturador | 
+ pplsmu     | 
+ aavilan    | 
+ pplcron    | (UTF-8)
+ dormeno    | 
+ ppl        | 
+ ctoro      | 
+ centreon   | 
+(9 rows)
+
+# To force all OS users to have UTF8 as their client_encodig, as root:
+
+nano /etc/profile
+
+#... and add at the end the following:
+
+export PGCLIENTENCODING='UTF8'
+
+# Save changes and exit console. After log in again, the user will have UTF8 set as client_encoding in PostgreSQL
+
