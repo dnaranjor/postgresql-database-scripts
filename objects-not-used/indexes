@@ -1,0 +1,32 @@
+# Indexes without use for PG 8.3:
+
+select
+      s.schemaname as sch,
+      s.relname as rel,
+      s.indexrelname as idx,
+      s.idx_scan as scans,
+      pg_size_pretty(pg_relation_size(s.relid)) as ts,
+      pg_size_pretty(pg_relation_size(s.indexrelid)) as "is"
+    from
+      pg_stat_user_indexes s
+      join pg_index i on i.indexrelid=s.indexrelid
+      left join pg_constraint c on i.indrelid=c.conrelid
+      and array_to_string(i.indkey, ' ') = array_to_string(c.conkey, ' ')
+    where
+      i.indisunique is false and
+      pg_relation_size(s.relid) > 1000000 and
+      s.idx_scan < 100000 and c.confrelid is null
+    order by
+      s.idx_scan asc, pg_relation_size(s.relid) desc;
+      
+# As a result,
+
+ sch   |               rel                |                  idx                  | scans |   ts    |    is    
+--------+----------------------------------+---------------------------------------+-------+---------+----------
+ public | nom_egresos_retro_cau_12         | idx_nerc_estado                       |     0 | 26 GB   | 1785 MB
+ public | nom_egresos_retro_cau_12         | nerc_idx_2                            |     0 | 26 GB   | 1789 MB
+ public | nom_egresos_retro_cau_12         | nercifid_12_pk                        |     0 | 26 GB   | 1787 MB
+ public | nom_egresos_retro_cau_12         | nerc_idx_3                            |     0 | 26 GB   | 7005 MB
+ public | nom_egresos_retro_cau_12         | nom12_rutcompuesto_idx                |     0 | 26 GB   | 1858 MB
+ public | nom_egresos_men_cau_11           | nemcifid_11_pk                        |     0 | 26 GB   | 2544 MB
+ public | nom_egresos_men_cau_11           | idx_nemc_estado                       |     0 | 26 GB   | 2543 MB
