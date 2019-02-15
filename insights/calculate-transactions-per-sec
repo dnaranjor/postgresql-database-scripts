@@ -1,13 +1,13 @@
-# Function to show transactions per second via PSQL
+# Function to show transactions per second via PSQL (only Postgres 9.x or newer)
 
 DO $$ 
 DECLARE
-   a          INTEGER;
-   b          INTEGER;
+   a          BIGINT;
+   b          BIGINT;
    c          NUMERIC(4, 2);    
 BEGIN 
    SELECT sum(xact_commit+xact_rollback) INTO a FROM pg_stat_database;
-   PERFORM pg_sleep(10);
+   PERFORM pg_sleep(60);
    SELECT sum(xact_commit+xact_rollback) INTO b FROM pg_stat_database;
    c := (b - a)/60;
    RAISE NOTICE'Transacciones por segundo (TPS): %', c;
