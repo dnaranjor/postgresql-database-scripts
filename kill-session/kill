@@ -27,6 +27,14 @@ FROM pg_stat_activity
 WHERE query != '<IDLE>' AND query NOT ILIKE '%pg_stat_activity%' 
 ORDER BY query_start desc;
 
+# Y tambien:
+
+SELECT 'SELECT pg_cancel_backend(' || pid ||');' AS to_cancel, date_trunc('second', current_timestamp - query_start) AS runtime, substr(query,1,75) AS query 
+FROM pg_stat_activity 
+WHERE query != '<IDLE>' 
+AND upper(query) LIKE 'SELECT%' 
+ORDER BY query_start limit 10;
+
 #Additionally, the command provides details of the last query running on each connection,
 #the connected user (usename), the database (datname) in use, and the start
 #times of the query. You need this view to grab the process IDs of connections that
