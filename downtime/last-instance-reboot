@@ -1,0 +1,10 @@
+#Last DB instance restart:
+
+select pg_postmaster_start_time();
+
+# Expected result:
+
+   pg_postmaster_start_time    
+-------------------------------
+ 2018-10-22 05:58:07.238429-03
+(1 row)
