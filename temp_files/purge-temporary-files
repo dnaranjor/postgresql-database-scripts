@@ -44,5 +44,13 @@ select current_timestamp, min(backend_start) from pg_stat_activity;
 # asi, $PGDATA = /opt/PGDATA/PPLRETAIL2/DATA en este caso.
 # Luego, salir al S.O. y listar el contenido del directorio $PGDATA/pgsql_tmp/  
 # Alli, se veran los archivos temporales que aun no han sido purgados por PostgreSQL.
+# En el caso de que $PGDATA = pg_tblspc/16384/:
 
+SELECT filename, pid, (pg_stat_file(dir || '/' || filename)).modification AS modified_at
+FROM (SELECT CAST('pg_tblspc/16384/pgsql_tmp' AS TEXT) as dir, filename, 
+            CAST(regexp_replace(filename, $r$^pgsql_tmp(\d+)\..*$$r$, $rr$\1$rr$, 'g') AS INT) as pid 
+        FROM pg_ls_dir('pg_tblspc/16384/pgsql_tmp') AS the (filename)) AS temp_files (dir, filename, pid)
+LEFT JOIN pg_stat_activity ON procpid = pid
+WHERE procpid IS NULL
+ORDER BY modified_at;
 
