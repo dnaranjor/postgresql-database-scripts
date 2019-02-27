@@ -1,0 +1,7 @@
+# In PSQL 8.3, to drop a constraint:
+
+ALTER TABLE <table_name> DROP CONSTRAINT <contraint_name>;
+
+# In PSQL 8.3, to add a constraint:
+
+ALTER TABLE <table_name> ADD CONSTRAINT <contraint_name> (key);
