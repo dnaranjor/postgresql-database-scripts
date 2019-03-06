@@ -1,0 +1,30 @@
+# To recurrently watch some activity ocurring in the database instance (every 60 seconds), from OS prompt (Linux):
+
+watch -n60 'echo "select count(*),usename from pg_stat_activity group by 2; select count(*) from pg_stat_activity ;" | psql -U ppl -p 5432 PPLDTE -tA '
+
+# The output:
+
+Every 60,0s: echo "select count(*),usename from pg_stat_activity group by 2; select count(*) from pg_stat_activity ;" | psql -U ppl -p 5432 PPLDTE                                                             Wed Mar  6 09:37:14 2019
+
+ count |  usename
+-------+------------
+     3 | impresor3
+     3 | impresor7
+     3 | impresor6
+     3 | impresor1
+     3 | impresor10
+     6 | impresor12
+     3 | impresor2
+     3 | impresor11
+     3 | impresor8
+     3 | impresor9
+     3 | impresor4
+     3 | impresor5
+    13 | ppl
+     6 | ppldte
+(14 filas)
+
+ count
+-------
+    58
+(1 fila)
