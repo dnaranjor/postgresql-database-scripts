@@ -1,0 +1,14 @@
+# Lista los tablespaces configurados:
+#
+# Postgres 9.5
+
+SELECT spcname AS NOMBRE, pg_tablespace_location(a.oid) AS DIRECTORIO, b.rolname AS PROPIETARIO FROM pg_tablespace a,pg_authid b WHERE a.spcowner=b.oid;
+
+# Resultado:
+
+nombre     |       directorio               | propietario
+-----------------------------------------------------------
+pg_global  |                                | pplretail3_2
+pg_default |                                | pplretail3_2
+index      | /opt/PGDATA/PPLRETAIL3/INDEX_2 | ppl
+data       | /opt/PGDATA/PPLRETAIL3/DATA_2  | ppl
