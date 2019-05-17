@@ -12,3 +12,15 @@ pg_global  |                                | pplretail3_2
 pg_default |                                | pplretail3_2
 index      | /opt/PGDATA/PPLRETAIL3/INDEX_2 | ppl
 data       | /opt/PGDATA/PPLRETAIL3/DATA_2  | ppl
+
+# Postgres 8.3
+
+SELECT * FROM pg_tablespace;
+
+   spcname    | spcowner |    spclocation    | spcacl 
+--------------+----------+-------------------+--------
+ pg_default   |       10 |                   | 
+ pg_global    |       10 |                   | 
+ PPLDTE_INDEX |    16395 | /opt/PGDATA/INDEX | 
+ PPLDTE_DATA  |    16395 | /opt/PGTABLE/DATA | 
+(4 rows)
