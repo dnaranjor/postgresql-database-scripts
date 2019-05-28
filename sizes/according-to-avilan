@@ -1,0 +1,65 @@
+/*Consultar el tamaño de todos los objetos: 8.3 */	
+	
+	 SELECT pg_database.datname, pg_class.relname AS "DB.Tabla", 
+		CASE WHEN pg_class.relkind = 'r' 
+			THEN 
+				'Tabla' 
+			ELSE 
+				'Indice' 
+		END AS "Tipo", 
+		pg_class.reltuples AS "Tuplas", pg_class.relpages * 8 / 1024 AS "Espacio (Mb)", 
+		CASE WHEN pg_tablespace.spcname = 'pg_default' 
+			THEN 
+				(SELECT setting||'/base' FROM pg_settings WHERE name = 'data_directory') || '/' || pg_database.oid || '/' || pg_class.relfilenode || '*' 
+			ELSE 
+				pg_tablespace.spclocation || '/' || pg_database.oid || '/' || pg_class.relfilenode || '*' 
+		END AS "Ruta" 
+		FROM pg_database, pg_class, pg_tablespace 
+		WHERE pg_database.datistemplate = FALSE AND 
+		CASE WHEN pg_class.reltablespace = 0 
+			THEN 
+				pg_database.dattablespace = pg_tablespace.oid 
+			ELSE 
+				pg_class.reltablespace = pg_tablespace.oid 
+		END AND pg_class.relkind IN ('r', 'i') AND pg_database.datname = current_database() AND pg_class.relowner> 10 
+		ORDER BY pg_class.relpages DESC; 
+
+/Consultar el tamaño de todos los objetos: 9.0/	
+	
+	 SELECT pg_database.datname, pg_class.relname AS "DB.Tabla", CASE WHEN pg_class.relkind = 'r' THEN 'Tabla' ELSE 'Indice' END AS "Tipo",pg_class.reltuples AS "Tuplas", 
+	 pg_class.relpages * 8 / 1024 AS "Espacio (Mb)", 
+		CASE WHEN pg_tablespace.spcname = 'pg_default' 
+			THEN 
+				(SELECT setting||'/base' 
+				FROM pg_settings 
+				WHERE name = 'data_directory') || '/' || pg_database.oid || '/' || pg_class.relfilenode || '*' 
+			ELSE 
+				(select pg_tablespace_location(pg_tablespace.oid)) || '/' || pg_database.oid || '/' || pg_class.relfilenode || '*' END AS "Ruta" 
+				FROM pg_database, pg_class, pg_tablespace 
+				WHERE pg_database.datistemplate = FALSE AND 
+		CASE WHEN pg_class.reltablespace = 0 
+			THEN 
+				pg_database.dattablespace = pg_tablespace.oid 
+			ELSE 
+				pg_class.reltablespace = pg_tablespace.oid 
+		END AND pg_class.relkind IN ('r','i') AND pg_database.datname = current_database() AND pg_class.relowner> 10 
+		ORDER BY pg_class.relpages DESC;
+
+	
+/Consultar el tamaño de todos los objetos  8.3 :/
+	SELECT
+	nspname,relname,
+	round(100 * pg_relation_size(indexrelid) / pg_relation_size(indrelid)) / 100
+	AS index_ratio,
+	pg_size_pretty(pg_relation_size(indexrelid)) AS index_size,
+	pg_size_pretty(pg_relation_size(indrelid)) AS table_size
+	FROM pg_index I
+	LEFT JOIN pg_class C ON (C.oid = I.indexrelid)
+	LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
+	WHERE
+	nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast') AND
+	C.relkind='i' 
+	AND 	pg_relation_size(indrelid) > 0
+	and relname in('docemi_deposid_idx','dix_deiprid','docemilog_code_idx','mailemi_agent_idx','doctodis_ddotid_idx')
+	--and relname like '%deposid%'
+	order by index_size,table_size;
