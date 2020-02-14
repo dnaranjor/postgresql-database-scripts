@@ -1,0 +1,8 @@
+En cual puerto corre Postgres?
+==============================
+netstat -plunt | grep postgres
+
+Datos del Binario y el directorio de Datos donde corre Postgres:
+===============================================================
+
+ps -fea | grep data
