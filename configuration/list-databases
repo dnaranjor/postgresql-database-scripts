@@ -1,6 +1,6 @@
 #You can see a list of databases by running:
 
-psql -l
+/l
 
 Remember to first employ a user with access to PostgreSQL (by example, postgres). You could use: sudo su postgres
 
